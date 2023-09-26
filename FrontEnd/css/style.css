@@ -1,0 +1,574 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+    scroll-behavior: smooth;
+}
+
+:root {
+    --blue: #00B2B5;
+    --dark_blue: #2A2544;
+    --light_blue: #0a6e5c;
+    --white: #ffffff;
+}
+
+.wrapper {
+    width: 90%;
+    margin: auto;
+}
+
+.gradient-color {
+    background: linear-gradient(to right, var(--blue), var(--light_blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.btn, .btn1 {
+    font-size: 16px;
+    font-weight: 600;
+    background-color: transparent;
+    border: 2px solid transparent;
+    border-image: linear-gradient(to right, var(--blue), var(--light_blue)) 1;
+    padding: 5px 15px;
+    text-transform: capitalize;
+    cursor: pointer;
+    transition: 0.3s;
+    margin: 10px 2px;
+}
+
+.btn:hover {
+    background: linear-gradient(to right, var(--blue), var(--light_blue));
+    color: var(--white);
+}
+
+.btn-white {
+    border-color: var(--white);
+    color: var(--white);
+}
+.btn-white:hover {
+    background: var(--white);
+    color: var(--blue);
+}
+
+h2 {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 36px;
+    padding: 50px;
+    color: var(--dark_blue);
+}
+
+h3 {
+    color: var(--dark_blue);
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+/* ====================== Navbar ==================== */
+
+.navbar {
+    position: fixed;
+    z-index: 100;
+    width: 100%;
+    background: linear-gradient(to right, var(--blue), var(--light_blue));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+}
+
+.navbar .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar .wrapper .logo a {
+    text-decoration: none;
+}
+
+.navbar .heading {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--dark_blue);
+    text-transform: uppercase;
+}
+
+.navbar .closeBtn {
+    display: none;
+}
+
+.navbar .nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar .nav-links li {
+    list-style: none;
+    font-size: 18px;
+}
+
+.navbar .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    opacity: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--dark_blue);
+    transition: 0.3s;
+}
+
+.navbar .nav-links li a {
+    text-decoration: none;
+    color: var(--white);
+    margin: 10px 20px;
+    transition: 0.2s;
+    position: relative;
+}
+
+.navbar .nav-links a:hover {
+    color: var(--dark_blue);
+}
+.navbar .nav-links li a:hover::after {
+    opacity: 1;
+    width: 100%;
+}
+
+.navbar .login-signup a {
+    text-decoration: none;
+    color: transparent;
+}
+
+.navbar .login-signup .btn {
+    /* margin: 0; */
+    margin: 5px;
+    color: var(--white);
+    border: 1px solid var(--white);
+}
+
+.navbar .login-signup .btn:hover {
+    background: var(--white);
+    color: var(--blue);
+}
+
+.navbar .menu{
+    cursor: pointer;
+    display: none;
+}
+
+.menu svg{
+    height: 25px;
+}
+
+/* ====================== Main Section ======================= */
+
+.main {
+    width: 100%;
+    height: 100vh;
+    background-color: var(--white);
+    display: flex;
+    align-items: center;
+}
+
+h1{
+    color: var(--dark_blue);
+    font-size: 60px;
+    position: relative;
+}
+
+.main .btn {
+    margin: 30px 0;
+    border: 3px solid transparent;
+    border-image: linear-gradient(to right, var(--blue), var(--light_blue)) 1;
+    font-size: 24px;
+    font-weight: 700;
+    padding: 7px 20px;
+    text-transform: capitalize;
+    background-color: transparent;
+}
+
+.main .btn:hover a{
+    background: linear-gradient(to right, var(--blue), var(--light_blue));
+    color: var(--white);
+}
+
+.main .btn a {
+    text-decoration: none;
+    color: transparent;
+    transition: 0.3s;
+}
+
+/* ====================== About Section ======================= */
+
+.about {
+    width: 100%;
+    background:  linear-gradient(to bottom right, var(--blue), var(--light_blue));
+    color: white;
+    padding-bottom: 100px;
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
+}
+
+.about .wrapper h2, 
+.about .wrapper h3 {
+    color: var(--white);
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.profile .image,
+.profile .info {
+    flex: 1 1 350px;
+    margin-top: 20px;
+}
+
+.profile .image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile .image img {
+    width: 60%;
+    box-shadow: 0 0 10px  var(--dark_blue);
+    border-radius: 5px;
+}
+
+.profile .info {
+    line-height: 25px;
+}
+
+.profile .info p {
+    margin: 10px 0;
+    text-align: justify;
+}
+
+.profile .btn-white {
+    border: 2px solid var(--white);
+}
+
+/* ====================== Projects Section ======================= */
+
+.projects {
+    width: 100%;
+    background-color: var(--white);
+}
+
+.project {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin: 0 0 50px 0;
+    gap: 50px;
+}
+
+.project .detail {
+    flex: 1 1 300px;
+}
+
+.project .project-image {
+    flex: 1 1 400px;
+}
+
+.detail a {
+    text-decoration: none;
+    color: transparent;
+}
+
+.detail .btn:hover a{
+    color: var(--white);
+}
+
+.detail p {
+    margin: 30px 0;
+    /* width: 90%; */
+    text-align: justify;
+}
+.projects .wrapper .detail p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.detail p span {
+    color: var(--dark_blue);
+    font-weight: 700;
+}
+
+.detail .btn1 {
+    border: none;
+}
+
+.detail .btn1:hover{
+    border: 2px solid transparent;
+    border-image: linear-gradient(to right, var(--blue), var(--light_blue)) 1;
+    background: linear-gradient(to right, var(--blue), var(--light_blue));
+}
+
+.project .detail .btn1:hover a {
+    color: var(--white);
+}
+
+.project-image img {
+    width: 100%;
+    transition: 0.3s;
+    box-shadow: 0 0 5px 1px #babbbb;
+}
+
+.project-image img:hover {
+    transform: scale(1.02);
+}
+
+ /* -------------------Contact ---------------- */
+
+.contact {
+   width: 100%;
+   background: linear-gradient(to bottom right, var(--blue), var(--light_blue));
+   clip-path: polygon(0 25%, 100% 0, 100% 100%, 0% 100% );
+   text-align: center;
+   color: var(--white);
+   padding: 50px 0;
+}
+
+.contact .wrapper h2 {
+    color: var(--white);
+}
+
+.contact .wrapper a {
+    text-decoration: none;
+}
+
+.contact .wrapper img {
+    margin: 0 10px;
+    width: 35px;
+}
+
+.contact .wrapper p {
+    margin: 20px 0;
+    font-size: 20px;
+}
+
+.contact .btn {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 10px 0;
+}
+
+.contact .btn-white {
+    border: 2px solid var(--white);
+}
+
+/* ---------------Footer -------------- */
+
+.footer {
+    width: 100%;
+    background-color: #343535;
+    text-align: center;
+    padding: 50px 0;
+}
+
+.footer .arrowup svg {
+    width: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.footer .arrowup svg:hover {
+    fill: var(--blue);
+    transform: translateY(-5px);
+}
+
+.footer .social-icons {
+    margin: 40px 0 30px 0;
+}
+
+.social-icons a {
+    text-decoration: none;
+}
+
+.social-icons svg {
+    width: 25px;
+    margin: 0 25px;
+    cursor: pointer;
+    fill: white;
+}
+.social-icons svg:hover {
+    fill: var(--blue);
+    transform: scale(1.2);
+}
+
+.footer hr {
+    width: 60%;
+    margin: auto;
+    background-color: grey;
+    height: 1px;
+    border: none;
+}
+
+.footer p {
+    font-size: 12px;
+}
+
+.footer .copywrite p {
+    margin: 10px 0;
+    color: grey;
+    
+}
+
+.footer .bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bottom a {
+    text-decoration: none;
+    color: black;
+    margin: 20px 3px;
+}
+
+.group-button {
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.span1 svg{
+    width: 12px;
+    fill: black;
+    margin-right: 5px;
+}
+
+.group-button .span1{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: #dfe0e0;
+    padding: 5px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.group-button .span2 {
+    padding: 5px 10px;
+    background-color: var(--white);
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+
+
+
+/*------------- Media Query for tablet screen (Navbar, Main Section, About Section & Projects Section) ------------*/
+
+@media (max-width: 768px) {
+    p {
+        font-size: 14px;
+    }
+    h2 {
+        font-size: 25px;
+    }
+
+    /* Navbar Section */
+    
+    .navbar .heading {
+        font-size: 20px;
+    }
+    .navbar .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 50%; 
+        height: 100vh;
+        background: linear-gradient(to right, var(--blue), var(--light_blue));
+        transition: right 0.3s ease;
+        z-index: 1000;
+        display: none;
+        padding: 100px 50px 50px 50px;
+        box-sizing: border-box;
+    }
+
+    .nav-links li {
+        padding: 10px 0;
+        font-weight: 500;
+    }
+
+    .nav-links .login-signup {
+        margin: 20px 12px;
+    }
+
+
+    .navbar .menu {
+        display: block;
+    }
+
+    .navbar .closeBtn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        display: block;
+      }
+
+    .menu svg{
+        height: 20px;
+    }
+
+    /* Main Section */
+
+    h1 {
+        font-size: 30px;
+    }
+
+    .main .btn {
+        font-size: 16px;
+    }
+
+    /* About Section */
+
+    .profile .info {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    /* Project Section */
+
+    .project .detail p{
+        width: 100%;
+    }
+
+    h3 {
+        font-size: 20px;
+    }
+
+    .detail .btn1,
+    .detail .btn {
+        font-size: 14px;
+    }
+
+    /* Contact Section */
+
+    .contact .btn {
+        font-size: 16px;
+    }
+
+    /* Footer Section */
+
+    .social-icons svg {
+        width: 20px;
+    }
+}

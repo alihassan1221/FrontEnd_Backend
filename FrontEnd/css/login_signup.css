@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.login-signup {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom right, #00B2B5, #0a6e5c);
+}
+
+.wrapper {
+    width: 30%;
+    border-radius: 5px;
+    background-color: white;
+    padding: 30px;
+    position: relative;
+}
+
+.wrapper.hide {
+    display: none;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+  }
+
+h1 {
+    text-align: center;
+    margin: 20px 0;
+    text-transform: uppercase;
+}
+p {
+    margin: 10px 0;
+}
+
+p a {
+    text-decoration: none;
+    color: blue;
+    cursor: pointer;
+}
+
+p:last-child {
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    border-radius: 10px;
+    outline: none;
+    border: 1px solid grey;
+    margin: 10px 0;
+    padding: 15px;
+}
+
+input[type="submit"] {
+    cursor: pointer;
+}
+
+.btn {
+    width: 100%;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    background: linear-gradient(to bottom right, #00B2B5, #0a6e5c);
+}
+
+.login_signup_buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center ;
+    margin: 10px;
+}
+
+.btn1 {
+    width: 40%;
+    margin: auto;
+    background: linear-gradient(to bottom right, #00B2B5, #0a6e5c);
+    padding: 10px;
+    margin: 0;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+    font-size: 18px;
+}
+
+.border-left {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.border-right {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background: transparent;
+    color: black;
+}
+
+
+/* SignUp Form */
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    background-color: white;
+    padding: 30px;
+    z-index: -1;
+    display: none;
+}
+
+.container.active {
+    display: block;
+    z-index: 1;
+}
+
+.container .input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    column-gap: 10px;
+}
+
+.container .input input {
+    flex: 1 1 40%;
+}
+
+.container .border-right {
+    background: linear-gradient(to bottom right, #00B2B5, #0a6e5c);    
+    color: white;
+}
+
+.container .border-left {
+    background: none;
+    color: black;
+}

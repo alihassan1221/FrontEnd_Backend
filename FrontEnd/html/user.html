@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="icon" href="./assets/icons/portfolio.png" title="portfolio icon"> -->
+    <link rel="stylesheet" href="../css/style.css" title="css file">
+    <link rel="stylesheet" href="../css/user.css">
+    <link rel="stylesheet" href="../css/menu.css">
+    <title>User Login</title>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+       <div class="wrapper">
+            <div class="logo">
+                <a href="#home"><span class="heading">portfolio</span></a>
+            </div>
+            <ul class="nav-links">
+                <svg class="closeBtn" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><style>svg{fill:#ffffff}</style><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                <li><a href="#home" title="Home">Home</a></li>
+                <li><a href="#about" title="About">About</a></li>
+                <li><a href="#contact" title="Contact">Contact</a></li>
+                <li><a href="#projects" title="Projects">Projects</a></li>
+                <button id="logoutBtn" class="btn btn-white">Logout</button>
+            </ul>
+            <div class="menu">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" height="1em" viewBox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg>
+            </div>
+       </div>
+    </nav>
+
+    <!-- Main -->
+
+    <main id="home" class="main">
+        <div class="wrapper">
+            <div class="intro">
+                
+                <h1 id="heading">Hi, my name is <span class="gradient-color" id="oldName">Ali Hassan</span> <br> I'm the <span id="oldPosition">Full Stack Developer</span>.</h1>
+                <button class="btn gradient-color btn-hover"><a href="#about">know more</a></button>
+            </div>
+            <div class="popup">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="newName" placeholder="Your Name" required>
+                <label for="position">Position</label>
+                <input type="text" name="name" id="newPosition" placeholder="Your Position in Company" required>
+                <div class="submit">
+                    <input id="submitBtn" type="submit" class="btn">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Main end -->
+
+    <!-- About -->
+
+    <section id="about" class="about">
+        <div class="wrapper">
+            <h2>about me</h2>
+            <button id="personalDetailBtn" class="btn btn-white">Add Details</button>
+            <!-- <button id="editPersonalDetailBtn" class="btn btn-white">Edit Details</button> -->
+
+            <div class="profile">
+                <form class="aboutForm" id="aboutForm">
+                    <div class="heading">
+                        <h2>Personal Detail</h2>
+                        <svg id="aboutCloseBtn" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><style>svg{fill:#ffffff}</style><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                    </div>
+    
+                    <label for="aboutPosition">Position*</label>
+                    <input id="aboutPosition" type="text" name="aboutPosition" required>
+                
+                    <label for="aboutSummary">Summary*</label>
+                    <input id="aboutSummary" type="text" name="aboutSummary" required>
+    
+                    <label for="aboutAddress">Address*</label>
+                    <input id="aboutAddress" type="text" name="aboutAddress" required>
+    
+                    <label for="aboutCity">City*</label>
+                    <input id="aboutCity" type="text" name="aboutCity" required>
+
+                    <label for="profile">Upload Your Profile Picture*</label>
+                    <input id="profile" type="file" alt="Profile Image" onchange="getProfileUrl(event)">
+    
+                    <input id="saveAbout" type="submit" value="Save">
+    
+                </form>
+                <div id="profileImage" class="image">
+                    <img src="" alt="Profile Image">
+                </div>
+                <div id="aboutInformation" class="info">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About End -->
+
+    <!-- Education -->
+    <section class="education" id="education">
+        <div class="wrapper">
+            <h2>Education</h2>
+            <div class="search-bar">
+                <input type="search" id="searchEducation" placeholder="Search Education">
+                <button id="addEducationBtn" class="btn btn-white">Add Education</button>
+            </div>
+            <form class="educationForm" id="educationForm">
+
+                <div class="heading">
+                    <h2>Education Detail</h2>
+                    <svg id="educationCloseBtn" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><style>svg{fill:#ffffff}</style><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                </div>
+
+                <label for="title">Institute*</label>
+                <input id="institute" type="text" name="institue" required>
+                
+                <label for="degree">Degree*</label>
+                <input id="degree" type="text" name="degree" required>
+                
+                <label for="major">Field of Study*</label>
+                <input id="major" type="text" name="major" required>
+                
+                <label for="grades">Grades/CGPA*</label>
+                <input id="grades" type="text" name="grades" required>
+
+                <label for="startingDate">Starting Date*</label>
+                <input id="startingDate" type="date" name="startingDate" required>
+
+                <label for="endingDateate">Ending Date*</label>
+                <input id="endingDate" type="date" name="endingDate" required>
+
+                <input id="submitEducation" type="submit" value="Save">
+
+            </form>
+
+            <div class="educationCards">
+                <div class="educationTable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Institute</th>
+                                <th>Degree</th>
+                                <th>Field of Study</th>
+                                <th>Grades</th>
+                                <th>Starting Date</th>
+                                <th>Ending Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="educationBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </section> 
+    <!-- End Education -->
+
+    
+    
+
+    <!-- Experience -->
+    <section class="experience" id="experience">
+        <div class="wrapper">
+            <h2>Experience</h2>
+            <div class="search-bar">
+                <input type="search" id="searchExperience" placeholder="Search Experience">
+                <button id="addExperienceBtn" class="btn btn-white">Add Experience</button>
+            </div>
+            <form class="experienceForm" id="experienceForm">
+
+                <div class="heading">
+                    <h2>Experience Detail</h2>
+                    <svg id="experienceCloseBtn" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><style>svg{fill:#ffffff}</style><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                </div>
+
+                <label for="title">Title*</label>
+                <input id="experienceTitle" type="text" name="title" required>
+                
+                <label for="companyName">Company Name*</label>
+                <input id="experienceCompany" type="text" name="companyName" required>
+
+                <label for="etype">Employment Type*</label>
+                <select id="experienceEmploymentType" name="etype">
+                    <option>Please Select</option>
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Self-employed">Self-employed</option>
+                    <option value="Internship">Internship</option>
+                    <option value="Freelance">Freelance</option>
+                    <option value="Contract">Contract</option>
+                </select>
+                
+                <label for="location">Location*</label>
+                <input id="experienceLocation" type="text" name="location" required>
+                
+                <label for="jtype">Job Type*</label>
+                <select id="experienceJobType" name="jtype">
+                    <option>Please Select</option>
+                    <option value="On-site">On-site</option>
+                    <option value="Hybrid">Hybrid</option>
+                    <option value="Remote">Remote</option>
+                </select>
+
+                <label for="sdate">Starting Date*</label>
+                <input id="sDate" type="date" name="sdate" required>
+
+                <label for="edate">Ending Date*</label>
+                <input id="eDate" type="date" name="edate" required>
+
+                <input id="submitExperience" type="submit" value="Save">
+
+            </form>
+
+            <div class="cards">
+                <div class="experienceCards">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Company Name</th>
+                                <th>Employment Type</th>
+                                <th>Location</th>
+                                <th>Job Type</th>
+                                <th>Starting Date</th>
+                                <th>Ending Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="experienceBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+    <!-- End Experience -->
+
+    <!-- Projects -->
+
+    <section id="projects" class="projects">
+        <div class="wrapper">
+            <h2>projects</h2>
+            <div class="search-bar">
+                <input type="search" id="searchProjects" placeholder="Search projects">
+                <button id="addProject" class="btn gradient-color addBtn">
+                    Add Project
+                </button>
+            </div>
+            <form class="projectsForm" id="projectsForm">
+                <div class="heading">
+                    <h2>Project Information</h2>
+                    <svg id="projectsCloseBtn" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><style>svg{fill:#ffffff}</style><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                </div>
+
+                 <label for="projectTitle">Project Title*</label>
+                 <input id="projectTitle" type="text" name="projectTitle" required>
+            
+                 <label for="projectDetail">Project Detail*</label>
+                 <input id="projectDetail" type="text" name="projectDetail" required>
+
+                 <label for="liveLink">Live Link*</label>
+                 <input id="liveLink" type="url" name="liveLink" required>
+
+                 <label for="codeLink">Code Link*</label>
+                 <input id="codeLink" type="url" name="codeLink" required>
+
+                 <label for="skills">Skills*</label>
+                 <input id="skills" type="text" name="skills" required>
+
+                 <label for="projectImage">Upload Project Image*</label>
+                 <input id="projectImage" type="file" name="projectImage" accept="image/*" onchange="getImageUrl(event)">
+
+                <button id="saveBtn" class="btn">Save</button>
+
+            </form>
+            <div class="popover-detail">
+                <img src="" alt="Project Image">
+                <h2></h2>
+                <p></p>
+                <button class="closePopup">Close</button>
+            </div>
+            <div class="project" id="userProjects">
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects End -->
+
+    <!-- Contact -->
+
+    <section id="contact" class="contact">
+        <div class="wrapper" id="contactWrapper">
+        
+        </div>
+    </section>
+
+    <!-- Contact End -->
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="wrapper">
+            <div class="button">
+                <button id="addSocailLinkBtn" class="btn gradient-color btn-white">Add Social Links</button>
+            </div>
+            <div class = "socialLinkForm">
+                <div class="heading">
+                    <h2>Add Social Media Links</h2>
+                    <svg id="socialCloseBtn" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><style>svg{fill:#ffffff}</style><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                </div>
+                
+                <form class="socialForm" id="socialForm">
+                    <label for="twitterLink">Twitter Link*</label>
+                    <input id="twitterLink" type="url" placeholder="Your Twitter Profile Link" >
+
+                    <label for="linkedinLink">LinkedIn Link*</label>
+                    <input id="linkedinLink" type="url" placeholder="Your Linkedin Profile Link" >
+
+                    <label for="githubLink">Github Link*</label>
+                    <input id="githubLink" type="url" placeholder="Your GitHub Profile Link" >
+
+                    <input type="submit" value="Save">
+                </form>
+            </div>
+            <div class="arrowup">
+                <a href="#home">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" height="1em" viewBox="0 0 448 512"><style>svg{fill:#ffffff}</style><path d="M201.4 137.4c12.5-12.5 32.8-12.5 45.3 0l160 160c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L224 205.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l160-160z"/></svg>
+                </a>
+            </div>
+            <div class="social-icons" id="social-icons">
+                <!-- Twitter SVG -->
+                <a id="twitter" href="" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 512 512"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.  791-32.161 39.308-52.628 54.253z"/></svg>
+                </a>
+
+                <!-- Linkedin SVG -->
+                <a id="linkedin" href="" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 448 512"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg>
+                </a>
+
+                <!-- Github SVG -->
+                <a id="github" href="" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+                </a>
+            </div>
+            <hr>
+            <div class="copywrite">
+                <p>&copy; 2023 - Template developed by Ali Hassan Mughal</p>
+            </div>
+            <div class="bottom">
+                <a href="#">
+                    <div class="group-button">
+                        <span class="span1">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 448 512"><path d="M80 104a24 24 0 1 0 0-48 24 24 0 1 0 0 48zm80-24c0 32.8-19.7 61-48 73.3V192c0 17.7 14.3 32 32 32H304c17.7 0 32-14.3 32-32V153.3C307.7 141 288 112.8 288 80c0-44.2 35.8-80 80-80s80 35.8 80 80c0 32.8-19.7 61-48 73.3V192c0 53-43 96-96 96H256v70.7c28.3 12.3 48 40.5 48 73.3c0 44.2-35.8 80-80 80s-80-35.8-80-80c0-32.8 19.7-61 48-73.3V288H144c-53 0-96-43-96-96V153.3C19.7 141 0 112.8 0 80C0 35.8 35.8 0 80 0s80 35.8 80 80zm208 24a24 24 0 1 0 0-48 24 24 0 1 0 0 48zM248 432a24 24 0 1 0 -48 0 24 24 0 1 0 48 0z"/></svg>
+                            Fork
+                        </span>
+                        <span class="span2">5,213</span>
+                    </div>
+                </a>
+
+                <a href="#">
+                    <div class="group-button">
+                        <span class="span1">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 576 512"><path d="M287.9 0c9.2 0 17.6 5.2 21.6 13.5l68.6 141.3 153.2 22.6c9 1.3 16.5 7.6 19.3 16.3s.5 18.1-5.9 24.5L433.6 328.4l26.2 155.6c1.5 9-2.2 18.1-9.6 23.5s-17.3 6-25.3 1.7l-137-73.2L151 509.1c-8.1 4.3-17.9 3.7-25.3-1.7s-11.2-14.5-9.7-23.5l26.2-155.6L31.1 218.2c-6.5-6.4-8.7-15.9-5.9-24.5s10.3-14.9 19.3-16.3l153.2-22.6L266.3 13.5C270.4 5.2 278.7 0 287.9 0zm0 79L235.4 187.2c-3.5 7.1-10.2 12.1-18.1 13.3L99 217.9 184.9 303c5.5 5.5 8.1 13.3 6.8 21L171.4 443.7l105.2-56.2c7.1-3.8 15.6-3.8 22.6 0l105.2 56.2L384.2 324.1c-1.3-7.7 1.2-15.5 6.8-21l85.9-85.1L358.6 200.5c-7.8-1.2-14.6-6.1-18.1-13.3L287.9 79z"/></svg>
+                            Star
+                        </span>
+                        <span class="span2">12,528</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer End -->
+ 
+    <script src="../js/logout.js"></script>
+    <script src="../js/about.js"></script>
+    <script src="../js/education.js"></script>
+    <script src="../js/experience.js"></script>
+    <script src="../js/projects.js"></script>
+    <script src="../js/socialLinks.js"></script>
+    <script src="../js/menu.js"></script>
+    <script src="../js/restirctLogin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</body>
+</html>

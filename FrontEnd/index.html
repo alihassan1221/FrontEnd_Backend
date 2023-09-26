@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/login_signup.css">
+    <title>Document</title>
+</head>
+<body>
+    <main>
+        <div class="wrapper">
+            <h1>Login Form</h1>
+            <div class="login_signup_buttons">
+                <span class="btn1 border-left">Login</span>
+                <span class="btn1 border-right">Signup</span>
+            </div>
+            <form id="loginForm">
+                <div class="input">
+                    <input id="loginEmail" type="email" placeholder="Your Registered Email Here" name="email">
+                    <input id="loginPassword" type="password" placeholder="Your Password Here" name="password">
+                </div>
+                <p><a>Forgot Password?</a></p>
+                <input type="submit" class="btn">
+                <div class="popup"></div>
+                <p>Not a Member? <a class="border-right">Signup Now</a></p>
+            </form>
+        </div>
+        <div class="container">
+            <h1>SignUp Form</h1>
+            <div class="login_signup_buttons">
+                <span class="btn1 border-left">Login</span>
+                <span class="btn1 border-right">Signup</span>
+            </div>
+            <form id="signupForm">
+                <div class="input">
+                    <input id="fname" type="text" placeholder="First Name" name="fname" required>
+                    <input id="lname" type="text" placeholder="Last Name" name="lname" required>
+                    <input id="email" type="email" placeholder="Email" name="email" required>
+                    <input id="phone" type="tel" placeholder="Phone No. in International format" name="phone" required>
+                    <input id="password" type="password" placeholder="Password" name="password" required>
+                    <input id="cpassword" type="password" placeholder="Confirm Password" name="cpassword" required>
+                </div>
+                <input type="submit" class="btn">
+            </form>
+        </div>
+    </main>
+    
+
+    <script type="module" src="/js/script.js"></script>
+    <script src="../js/restirctLogin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

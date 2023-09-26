@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/user.css">
+    <link rel="stylesheet" href="../css/menu.css">
+    
+    <title>Projects</title>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="wrapper">
+             <div class="logo">
+                <span class="heading">Users Projects</span>
+             </div>
+             <ul class="nav-links">
+                <svg class="closeBtn" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><style>svg{fill:#ffffff}</style><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                 <li><a href="./adminDashboard.html" title="Home">Home</a></li>
+                 <li><a href="./userData.html" title="Users">Users</a></li>
+                 <li><a href="./userProjects.html" title="Projects">Projects</a></li>
+                <button id="logoutBtn" class="btn btn-white">Logout</button>
+             </ul>
+             <div class="menu">
+                 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" height="1em" viewBox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg>
+             </div>
+        </div>
+     </nav>
+
+ <!-- Projects Section-->
+    <section id="projects" class="projects">
+        <div class="wrapper">
+            <h2>projects</h2>
+            <div class="search-bar">
+                <input type="search" id="searchProjects" placeholder="Search projects by skills">
+            </div>
+            <form class="projectsForm" id="projectsForm">
+                <div class="heading">
+                    <h2>Project Information</h2>
+                    <svg id="projectsCloseBtn" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><style>svg{fill:#ffffff}</style><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                </div>
+
+                 <label for="projectTitle">Project Title*</label>
+                 <input id="projectTitle" type="text" name="projectTitle" required>
+            
+                 <label for="projectDetail">Project Detail*</label>
+                 <input id="projectDetail" type="text" name="projectDetail" required>
+
+                 <label for="liveLink">Live Link*</label>
+                 <input id="liveLink" type="url" name="liveLink" required>
+
+                 <label for="codeLink">Code Link*</label>
+                 <input id="codeLink" type="url" name="codeLink" required>
+
+                 <label for="skills">Skills*</label>
+                 <input id="skills" type="text" name="skills" required>
+
+                 <label for="projectImage">Upload Project Image*</label>
+                 <input id="projectImage" type="file" name="projectImage" accept="image/*" onchange="getImageUrl(event)" required>
+
+                <button id="saveBtn" class="btn">Save</button>
+
+            </form>
+
+            <div class="popover-detail">
+                <img src="" alt="Project Image">
+                <h2></h2>
+                <p></p>
+                <button class="closePopup">Close</button>
+            </div>
+            <div class="project" id="userProjects">
+
+
+            </div>
+        </div>
+    </section>
+
+    <script src="../js/adminUsersProjects.js"></script>
+    <script src="../js/logout.js"></script>
+    <script src="../js/menu.js"></script>
+    <script src="../js/restirctLogin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</body>
+</html>

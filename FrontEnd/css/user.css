@@ -1,0 +1,371 @@
+/* Main */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --blue: #00B2B5;
+    --dark_blue: #2A2544;
+    --light_blue: #0a6e5c;
+    --white: #ffffff;
+}
+
+/* Navbar */
+.navbar .btn {
+    border: 1px solid var(--white);
+}
+/* Main */
+.main .wrapper {
+    position: relative;
+}
+
+.main .editBtn {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.editBtn img {
+    width: 20px;
+    cursor: pointer;
+}
+
+.main .popup {
+    background-color: white;
+    padding: 30px;
+    width: 0;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 1px black;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    z-index: -1;
+    transition: 0.3s linear;
+}
+
+.popup.active {
+    opacity: 1;
+    width: 500px;
+    z-index: 1;
+}
+
+.popup label {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.popup input {
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px;
+    outline: none;
+    border: 1px solif black;
+    margin: 10px 0;
+}
+
+.popup .submit {
+    text-align: center;
+}
+
+.popup .btn {
+    padding: 10px;
+    font-size: 16px;
+    width: 20%;
+    border-radius: 2px;
+    border: none;
+    background-color: blue;
+    color: wheat;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* About */
+.about .wrapper,
+.education .wrapper,
+.experience .wrapper,
+.projects .wrapper {
+    position: relative;
+    min-height: 100vh;
+}
+
+ 
+/* Projects */
+.projects .wrapper .detail p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.projects .wrapper {
+    position: relative;
+}
+/* 
+.projects .wrapper .detail {
+    position: relative;
+} */
+
+.popover-detail {
+    position: absolute;
+    width: 40%;
+    margin: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    background: linear-gradient(to right, var(--blue), var(--light_blue));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 30px;
+    color: white;
+    border-radius: 5px;
+    display: none;
+}
+
+.popover-detail h2{
+    color: white;
+    padding: 10px 0;
+    font-size: 20px;
+}
+
+.popover-detail img{
+    width: 100%;
+}
+
+.popover-detail .closePopup {
+    margin: 20px 0;
+    background: var(--white);
+    border: 1px solid var(--white);
+    padding: 7px 10px;
+    color: var(--blue);
+    font-weight: 600;
+}
+
+.popover-detail .closePopup:hover {
+    background: linear-gradient(to right, var(--blue), var(--light_blue));
+    color: var(--white);
+}
+
+
+.projects .wrapper .addBtn:hover svg {
+    fill: var(--white);
+}
+
+.projects h2 {
+    text-transform: capitalize;
+    margin-bottom: 0;
+    padding-bottom: 30px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0 0 40px 0;
+}
+
+.search-bar input {
+    padding: 7px;
+    outline: none;
+    flex: 1 1 200px;
+}
+
+
+/* Experience */
+
+.experience .wrapper{
+    position: relative;
+}
+
+.experience .wrapper .btn {
+    color: var(--blue);
+    /* margin: 0 0 30px 0; */
+}
+
+.experience .wrapper .btn:hover {
+    background: linear-gradient(to right, var(--blue), var(--light_blue));
+    color: var(--white);   
+}
+
+.experienceCards {
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+th,
+td {
+    border: 1px solid black;
+    color: var(--dark_blue);
+}
+
+th {
+    padding: 20px 5px;
+    font-size: 18px;
+}
+
+td {
+    padding: 10px 5px;
+    font-size: 14px;
+}
+
+
+td svg {
+    fill: var(--blue);
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+td svg:last-child {
+    fill: rgb(218, 68, 68);
+}
+
+td svg:hover {
+    transform: scale(1.1);
+}
+
+/* Footer */
+.footer .wrapper .button {
+    text-align: left;
+}
+
+.footer .wrapper {
+    position: relative;
+}
+
+
+
+.socialLinkForm .heading {
+    position: relative;
+}
+
+.heading svg {
+    position: absolute;
+    right: -15px;
+    top: -15px;
+    cursor: pointer;
+    height: 25px;
+}
+
+.socialForm {
+    text-align: left;
+}
+
+.footer .wrapper .btn{
+    border: 2px solid var(--white);
+    align-items: flex-start;
+}
+
+
+/* Education */
+.education .wrapper {
+    position: relative;
+}
+
+
+.education .wrapper .btn{
+    color: var(--blue);
+}
+
+.education .wrapper .btn:hover {
+    background: linear-gradient(to right, var(--blue), var(--light_blue));
+    color: var(--white);
+}
+
+
+/*------------------------------- Forms ----------------------------------- */
+
+.projectsForm,
+.aboutForm,
+.experienceForm,
+.socialLinkForm,
+.educationForm {
+    position: absolute;
+    width: 60%;
+    top: 20px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index: 10;
+    background: linear-gradient(to right, var(--blue), var(--light_blue));
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 30px;
+    color: white;
+    border-radius: 5px;
+    display: none;
+}
+
+.socialLinkForm.active,
+.aboutForm.active,
+.projectsForm.active,
+.experienceForm.active,
+.educationForm.active {
+    display: block;
+}
+
+.socialLinkForm{
+    top: -150px;
+}
+
+.aboutForm .heading,
+.experienceForm .heading,
+.projectsForm .heading,
+.educationForm .heading {
+    position: relative;
+}
+
+.projectsForm h2,
+.experienceForm h2,
+.socialLinkForm h2,
+.aboutForm h2,
+.educationForm h2 {
+    color: var(--white);
+}
+
+
+.projectsForm .btn {
+    color: var(--white);
+    border: 1px solid var(--white);
+}
+
+.projectsForm .btn:hover {
+    color: var(--blue);
+    background: var(--white);
+}
+
+
+input,
+select {
+    width: 100%;
+    outline: none;
+    padding: 5px;
+    margin: 10px 0;
+}
+
+input[type="submit"]{
+    width: 20%;
+    padding: 8px;
+    border: 1px solid white;
+    border-radius: 2px;
+    cursor: pointer;
+    background-color: transparent;
+    color: white;
+    font-weight: 600;
+}
+
+input[type="submit"]:hover {
+    background-color: #0d6669;
+}
