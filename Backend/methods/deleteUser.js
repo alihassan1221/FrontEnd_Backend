@@ -1,27 +1,26 @@
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 const jwt = require('jsonwebtoken');
 const { handleTokenExpirationError } = require('./sessionExpire');
 const JWT_SECRET = 'secret_key';
 
-module.exports = async (req, res, index) => {
-    let data;
+module.exports = (pool) => async (req, res, UserID) => {
     let token;
     try {
-        data = req.data;
         token = req.headers.authorization;
-
+        
         if (!token) {
             res.writeHead(401, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ statusCode: 401, message: 'Unauthorized' }));
             return;
         }
 
-        // Verify and decode the token
-        jwt.verify(token, JWT_SECRET, (err, decoded) => {
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        jwt.verify(token, JWT_SECRET, async (err, decoded) => {
             if (err) {
                 if (err.name === 'TokenExpiredError') {
-                    const tokenErrorResponse = handleTokenExpirationError(data, token);
+                    const tokenErrorResponse = handleTokenExpirationError(err, token);
                     res.writeHead(tokenErrorResponse.statusCode, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify(tokenErrorResponse));
                 } else {
@@ -30,22 +29,21 @@ module.exports = async (req, res, index) => {
                     res.end(JSON.stringify({ statusCode: 401, message: 'Unauthorized' }));
                 }
             } else {
-                if (isNaN(index) || index < 0 || index >= data.users.length) {
-                    res.statusCode = 400;
-                    res.write(JSON.stringify({ title: 'Bad Request', message: 'Invalid Index, User Not Found' }));
-                    res.end();
+                const id = UserID;
+                const [users] = await pool.promise().query('SELECT * FROM Users WHERE UserID = ?', [id]);
+                const user = users[0];
+                
+                if (user) {
+                    await pool.execute("DELETE FROM users WHERE UserID=?", [id])
+                    res.writeHead(200, JSON.stringify('Content-Type', 'application/json'));
+                    res.end(JSON.stringify({ statusCode: 200, title: 'Success', message: 'User Deleted Successfully' }));
                 } else {
-                    data.users.splice(index, 1);
-                    fs.writeFileSync(path.join(__dirname, '../data/users.json'), JSON.stringify(data, null, 2));
-
-                    res.writeHead(204);
-                    res.end();
+                    res.writeHead(404, JSON.stringify('Content-Type', 'application/json'));
+                    res.end(JSON.stringify({ statusCode: 404, title: 'Not Found', message: 'User not found' }));
                 }
             }
         });
     } catch (error) {
         console.error(error);
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ title: 'Bad Request', message: 'Request Body is not Valid!' }));
     }
 };

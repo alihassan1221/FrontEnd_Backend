@@ -60,7 +60,8 @@ function ProjectsList(search = "") {
       let projectFound;
       data.projects.forEach((data, index) => {
         if (
-          data.skills.toLowerCase().includes(search.toLowerCase()) 
+          data.skills.toLowerCase().includes(search.toLowerCase()) ||
+          data.projectTitle.toLowerCase().includes(search.toLowerCase())
         ) {
           projectFound = true;
           
@@ -90,7 +91,7 @@ function ProjectsList(search = "") {
           let imageElement = document.createElement("div");
           imageElement.classList.add("project-image");
           let img = document.createElement("img");
-          img.src = data.projectImage;
+          img.src = data.projectImageURL;
           img.alt = "Project Image";
           imageElement.appendChild(img);
 
@@ -128,7 +129,7 @@ function ProjectsList(search = "") {
 ProjectsList();
 
 let searchInput = document.getElementById("searchProjects");
-searchInput.addEventListener("input", () => {
+searchInput.addEventListener('input', () => {
   ProjectsList(searchInput.value);
 });
 

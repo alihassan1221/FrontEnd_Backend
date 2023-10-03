@@ -21,22 +21,26 @@ module.exports = (pool) => async (req, res) => {
     }
 
     const user = users[0];
-    const experience = body;
+    const [existingLinks] = await pool.promise().query('SELECT * FROM social_media_links WHERE userId = ?', [user.UserID]);
 
-    await pool.execute(
-      "INSERT INTO experience (userId, title, company, employmentType, location, jobType, startingDate, endingDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-      [user.UserID, experience.title, experience.company, experience.employmentType, experience.location, experience.jobType, experience.startingDate, experience.endingDate]
-    );
+    if (existingLinks.length > 0) {
+      const links = body;
+      await pool.execute(
+        'UPDATE social_media_links SET twitterLink=?, githubLink=?, linkedinLink=? WHERE userId=?',
+        [links.twitterLink, links.githubLink, links.linkedinLink, user.UserID]
+      );
 
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ statusCode: 200, message: "Experience added successfully" }));
-  } 
-  catch (error) {
+      res.end(JSON.stringify({ statusCode: 200, message: "Social Links updated successfully" }));
+    } else {
+      res.writeHead(402, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ statusCode: 402, message: "Social Links Not Found" }));
+    }
+  } catch (error) {
+    console.error(error); // Log the error for debugging
     if (error.name === 'TokenExpiredError') {
       const tokenErrorResponse = handleTokenExpirationError(error, token);
       res.end(JSON.stringify(tokenErrorResponse.statusCode, tokenErrorResponse));
     } else {
-      console.error(error);
       res.end(JSON.stringify({ title: "Bad Request", message: "Request Body is not Valid!" }));
     }
   }

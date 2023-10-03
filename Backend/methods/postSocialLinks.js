@@ -1,60 +1,49 @@
-const fs = require("fs");
-const path = require("path");
+const mysql = require("mysql2/promise");
 const jwt = require("jsonwebtoken");
-const { handleTokenExpirationError } = require("./sessionExpire");
 const requestBodyParse = require("../util/body-parse");
 
 const JWT_SECRET = "secret_key";
 
-module.exports = async (req, res) => {
-  if (req.url === "/socialLinks" && req.method === "POST") {
-    let data;
-    let token;
-    try {
-      const body = await requestBodyParse(req);
-      data = req.data;
-      token = req.headers.authorization;
+module.exports = (pool) => async (req, res) => {
+  let token;
+  try {
+    const body = await requestBodyParse(req);
+    token = req.headers.authorization;
 
-      if (!token) {
-        res.writeHead(401, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ statusCode: 401, message: "Unauthorized" }));
-        return;
-      }
+    const decoded = jwt.verify(token, JWT_SECRET);
 
-      // Verify the token and decode its payload
-      const decoded = jwt.verify(token, JWT_SECRET);
+    const [users] = await pool.promise().query('SELECT * FROM Users WHERE UserID = ?', [decoded.userId]);
 
-      // Find the user in the data.users array by user ID
-      const user = data.users.find((user) => user.id === decoded.userId);
+    if (users.length === 0) {
+      res.end(JSON.stringify({ statusCode: 404, message: "User not found" }));
+      return;
+    }
 
-      if (!user) {
-        res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ statusCode: 400, message: "User not found" }));
-        return;
-      }
+    const user = users[0];
+    const [existingLinks] = await pool.promise().query('SELECT * FROM social_media_links WHERE userId = ?', [user.UserID]);
 
-      user.socialLinks = body;
+    if (existingLinks.length > 0) {
+      res.writeHead(400, JSON.stringify('Content-Type', 'application/json'));
+      res.end(JSON.stringify({ statusCode: 400, message: "Socail Links Already exists For this user" }));
+      return;
+    }
 
-    //   const socialLinks = user.socialLinks
+    const Links = body;
 
-      // Save the updated data to the users.json file
-      fs.writeFileSync(path.join(__dirname, "../data/users.json"), JSON.stringify(data, null, 2));
+    await pool.execute(
+      "INSERT INTO social_media_links (userId, twitterLink, githubLink, linkedinLink) VALUES (?, ?, ?, ?)",
+      [user.UserID, Links.twitterLink, Links.githubLink, Links.linkedinLink]
+    );
 
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ statusCode: 200, message: "About data updated successfully"}));
-    } catch (error) {
-      if (error.name === 'TokenExpiredError') {
-        const tokenErrorResponse = handleTokenExpirationError(data, token);
-        res.writeHead(tokenErrorResponse.statusCode, { "Content-Type": "application/json" });
-        res.end(JSON.stringify(tokenErrorResponse));
-      } else {
-        console.error(error);
-        res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ title: "Bad Request", message: "Request Body is not Valid!" }));
-      }
-  }
-  } else {
-    res.writeHead(404, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ title: "Not Found!", message: "Route not Found" }));
+    res.end(JSON.stringify({ statusCode: 200, message: "Social Links Added successfully" }));
+  } 
+  catch (error) {
+    console.error(error);
+    if (error.name === 'TokenExpiredError') {
+      const tokenErrorResponse = handleTokenExpirationError(error, token);
+      res.end(JSON.stringify(tokenErrorResponse.statusCode, tokenErrorResponse));
+    } else {
+      res.end(JSON.stringify({ title: "Bad Request", message: "Request Body is not Valid!" }));
+    }
   }
 };

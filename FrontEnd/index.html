@@ -17,8 +17,8 @@
             </div>
             <form id="loginForm">
                 <div class="input">
-                    <input id="loginEmail" type="email" placeholder="Your Registered Email Here" name="email">
-                    <input id="loginPassword" type="password" placeholder="Your Password Here" name="password">
+                    <input id="loginEmail" type="email" placeholder="Your Registered Email Here" name="email" required>
+                    <input id="loginPassword" type="password" placeholder="Your Password Here" name="password" required>
                 </div>
                 <p><a>Forgot Password?</a></p>
                 <input type="submit" class="btn">
@@ -32,7 +32,7 @@
                 <span class="btn1 border-left">Login</span>
                 <span class="btn1 border-right">Signup</span>
             </div>
-            <form id="signupForm">
+            <form id="signupForm" method="POST">
                 <div class="input">
                     <input id="fname" type="text" placeholder="First Name" name="fname" required>
                     <input id="lname" type="text" placeholder="Last Name" name="lname" required>

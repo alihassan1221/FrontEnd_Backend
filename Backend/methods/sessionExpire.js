@@ -1,27 +1,13 @@
-const fs = require("fs");
-const path = require("path");
+const jwt = require("jsonwebtoken");
 
-function handleTokenExpirationError(data, token) {
-  const fileTokenIndex = data.userToken.findIndex((user) => {
-    try {
-      return user.token === token;
-    } catch (err) {
-      console.log(err);
-      return false;
-    }
-  });
+const JWT_SECRET = "secret_key";
 
-  if (fileTokenIndex !== -1) {
-    data.userToken.splice(fileTokenIndex, 1);
-    fs.writeFileSync(path.join(__dirname, "../data/users.json"), JSON.stringify(data, null, 2));
+function handleTokenExpirationError(error, token) {
+  if (error.name === 'TokenExpiredError') {
+    return { statusCode: 401, message: "Token has expired." };
   } else {
-    console.log('Index Not Found');
+    return { statusCode: 403, message: "Invalid token." };
   }
-
-  return {
-    statusCode: 401,
-    message: "Token is Expired",
-  };
 }
 
 module.exports = { handleTokenExpirationError };

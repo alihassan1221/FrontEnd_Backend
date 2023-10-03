@@ -43,7 +43,7 @@ signupForm.addEventListener('submit', (e) => {
     }
 
     if (password !== cpassword) {
-        alert("Passwords do not match");
+        Swal.fire('Different Passwords', 'Passwords Does Not Match', 'error');
         return;
     }
 
@@ -61,14 +61,16 @@ signupForm.addEventListener('submit', (e) => {
     fetch('http://localhost:3000/submit', {
         method: "POST",
         headers: {
-            "Content-Type": "application/json" 
+            "Content-Type": "application/json", 
         },
         body: JSON.stringify(user)
     })
-    .then(res => res.json())
+    .then(res => {
+        return res.json();
+    })
     .then(data => {
         if(data.statusCode === 400) {
-            Swal.fire('Bad Request', 'Registration Not Successful!', 'error');
+            Swal.fire('Email Exists', 'Registeration Failed Email Already exists!', 'error');
         } 
         else if(data.statusCode === 200) {
             signupForm.reset();
@@ -110,30 +112,31 @@ loginForm.addEventListener('submit', (e) => {
         if(data.statusCode === 400) {
             loginForm.reset();
             Swal.fire('Bad Request', 'User not found', 'error');
-        } else if(data.statusCode === 401) {
+        } 
+        else if(data.statusCode === 404){
+            Swal.fire('Not Found', 'Route not Found', 'error');
+            return;
+        }
+        else if(data.statusCode === 401) {
             loginForm.reset();
             Swal.fire('Incorrect Information', 'Incorrect Password / Email', 'error');
         } else if(data.statusCode === 200) {
             const token = data.token;
-            if(data.user.email === 'admin@gmail.com'){
+
+            if(data.Role === 'admin'){
                 localStorage.setItem('token', token); 
                 Swal.fire('Good job!', 'Admin Login Successful!', 'success');
-                addEventListener('click', () => {
+                addEventListener('click', (e)=>{
+                    e.preventDefault();
                     window.location.href = '../html/adminDashboard.html';
                 });
                 return;
             }
+
             else {
                 localStorage.setItem('token', token);            
-                Swal.fire('Good job!', 'Login Successful!', 'success');
+                Swal.fire('Good job!', 'User Login Successful!', 'success');
                 localStorage.setItem('token', data.token);
-                data = {
-                    name: data.user.fname + " " + data.user.lname,
-                    position: data.position,
-                    phone: data.user.phone,
-                    email: data.user.email
-                }
-                localStorage.setItem('user', JSON.stringify(data));
                 addEventListener('click', ()=> {
                     window.location.href = '../html/user.html';
                     loginForm.reset();

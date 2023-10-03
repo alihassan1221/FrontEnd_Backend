@@ -1,53 +1,50 @@
-const fs = require("fs");
-const path = require("path");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const requestBodyParse = require("../util/body-parse");
+const jwt = require("jsonwebtoken");
 
 const JWT_SECRET = "secret_key";
 
-module.exports = async (req, res) => {
+module.exports = (pool) => async (req, res) => {
   if (req.url === "/login" && req.method === "POST") {
     try {
       const body = await requestBodyParse(req);
-      const data = req.data;
 
+      const [results] = await pool.promise().query('SELECT * FROM Users WHERE Email = ?', [body.email]);
 
-      const user = data.users.find((user) => user.email === body.email);
-
-      if (!user) {
-        res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ statusCode: 400, message: "User not found" }));
+      if (results.length === 0) {
+        res.end(JSON.stringify({ statusCode: 400, message: "Users not found" }));
         return;
       }
-
-      const passwordMatch = await bcrypt.compare(body.password, user.password);
+      const user = results[0];
+      const passwordMatch = await bcrypt.compare(body.password, user.PasswordHash);
 
       if (passwordMatch) {
-        const position = user.position || "Software Engineer";
+        const position = user.Position || "Software Engineer";
 
-        const token = jwt.sign({ userId: user.id, name: user.fname + " " + user.lname, position }, JWT_SECRET, { expiresIn:'1h' });
+        const token = jwt.sign(
+          { userId: user.UserID, name: user.FirstName + " " + user.LastName },JWT_SECRET,{ expiresIn: '1h' }
+        );
 
-        if (!data.userToken) {
-          data.userToken = [];
-        }
-        const userId = user.id;
+        const decoded = jwt.verify(token, JWT_SECRET);
 
-        data.userToken.push({ userId, token });
-        fs.writeFileSync(path.join(__dirname, "../data/users.json"), JSON.stringify(data, null, 2));
-        res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ statusCode: 200, message: "Login successful", position, user, token }));
+        await pool.execute(
+          "INSERT INTO usersTokens (userId, token) VALUES (?, ?)",
+          [decoded.userId, token]
+        );
+
+        const [users] = await pool.promise().query('SELECT * FROM Users WHERE UserID = ?', [decoded.userId]);
+        const gotUser = users[0];
+        const Role = gotUser.Role;
+
+        res.end(JSON.stringify({ statusCode: 200, message: "Login successful", token, Role }));
       } else {
-        res.writeHead(401, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ statusCode: 401, message: "Incorrect password" }));
       }
     } catch (err) {
       console.error(err);
-      res.writeHead(400, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ title: "Bad Request", message: "Request Body is not Valid!" }));
     }
   } else {
-    res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ title: "Not Found!", message: "Route not Found" }));
   }
 };

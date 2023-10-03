@@ -1,79 +1,45 @@
-const fs = require("fs");
-const path = require("path");
 const bcrypt = require("bcrypt");
-const { handleTokenExpirationError } = require("./sessionExpire");
 const requestBodyParse = require("../util/body-parse");
+// const { parse } = require("dotenv");
 
-module.exports = async (req, res) => {
-  if (req.url === "/submit" && req.method === "POST") {
+module.exports = (pool) => async (req, res) => {
+  try {
+    const body = await requestBodyParse(req);
+
     try {
-      const body = await requestBodyParse(req);
-      const token = req.headers.authorization;
+      const [results] = await pool.promise().query('SELECT Email FROM Users');
 
-      if (!Array.isArray(req.data.users)) {
-        req.data.users = [];
+      const emails = results;
+
+      if (emails && emails.length > 0) {
+        for (const requiredEmail of emails) {
+          if (requiredEmail.Email === body.email) {
+            res.end(JSON.stringify({ statusCode: 400, message: "Registeration Failed Email Already exists" }));
+            return;
+          }
+        }
       }
 
-      const existingEmail = req.data.users.some((user) => user.email === body.email);
-
-      if (existingEmail) {
-        res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ statusCode: 400, message: "Email already exists" }));
-        return;
-      }
-
-      const userId = generateUserId(req.data.users);
+      const isAdmin = ['admin1@gmail.com', 'admin2@gmail.com'].includes(body.email);
+      const role = isAdmin ? 'admin' : 'user';
 
       const hashedPassword = await bcrypt.hash(body.password, 10);
-      const userData = {
-        id: userId,
-        fname: body.fname,
-        lname: body.lname,
-        phone: body.phone,
-        email: body.email,
-        password: hashedPassword,
-      };
 
-      req.data.users.push(userData);
-
-      writeToDataFile(req.data);
+      await pool.promise().execute(
+          `INSERT INTO Users (FirstName, LastName, Phone, Email, PasswordHash, Role) VALUES (?, ?, ?, ?, ?, ?)`,
+          [body.fname, body.lname, body.phone, body.email, hashedPassword, role]
+      );
 
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ statusCode: 200, message: "User registered successfully" }));
     } catch (error) {
-      if (error.name === 'TokenExpiredError') {
-        const tokenErrorResponse = handleTokenExpirationError(data, token);
-        res.writeHead(tokenErrorResponse.statusCode, { "Content-Type": "application/json" });
-        res.end(JSON.stringify(tokenErrorResponse));
-      } else {
-        console.error(error);
-        res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ title: "Bad Request", message: "Request Body is not Valid!" }));
-      }
+      console.error('Error executing query:', error);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ statusCode: 500, message: "Internal server error" }));
     }
-  } else {
-    res.writeHead(404, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ title: "Not Found!", message: "Route not Found" }));
+  } catch (error) {
+    console.error(error);
+    res.writeHead(500, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ statusCode: 500, message: "Internal server error" }));
   }
 };
-
-function generateUserId(users) {
-  if (!users || users.length === 0) {
-    return 1;
-  } 
-  else {
-    const maxUserId = Math.max(...users.map((user) => user.id));
-    return maxUserId + 1;
-  }
-}
-
-// Define the writeToDataFile function
-function writeToDataFile(data) {
-  const filePath = path.join(__dirname, "../data/users.json");
-  try {
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-    console.log("Data written to users.json file successfully");
-  } catch (err) {
-    console.error("Error writing to users.json file:", err);
-  }
-}

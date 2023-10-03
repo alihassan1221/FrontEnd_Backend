@@ -1,8 +1,8 @@
 
 const logoutBtn = document.getElementById('logoutBtn');
-const oldName = document.getElementById('oldName');
-const oldPosition = document.getElementById('oldPosition');
-const contactWrapper = document.getElementById('contactWrapper');
+// const oldName = document.getElementById('oldName');
+// const oldPosition = document.getElementById('oldPosition');
+// const contactWrapper = document.getElementById('contactWrapper');
 
 const user = JSON.parse(localStorage.getItem('user'));
 
@@ -21,14 +21,14 @@ logoutBtn.addEventListener('click', () => {
 
             if (!token) {
                 Swal.fire('Not Found', 'Token Not Found', 'error');
-                return; // No need for addEventListener here
+                return;
             }
 
             fetch('http://localhost:3000/logout', {
-                method: 'POST',
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': token
+                    'Authorization': token,
                 }
             })
             .then((response) => {
@@ -36,7 +36,7 @@ logoutBtn.addEventListener('click', () => {
                     localStorage.clear();
                     window.location.href = '../index.html';
                 }
-                return response.json();
+                // return response.json();
             })
             .catch((err) => {
                 console.error(err);
@@ -46,14 +46,14 @@ logoutBtn.addEventListener('click', () => {
 });
 
 // Display user data
-oldName.textContent = user.name || 'Your Name Here';
-oldPosition.textContent = user.position || 'Your Position Here';
-contactWrapper.innerHTML = `
-    <h2>Contact</h2>
-    <a href="https://wa.me/${user.phone}" target="_blank">
-        <img src="../assets/icons/whatsapp.png" alt="Whatsapp Icon">
-    </a>
-    <a href="mailto:${user.email}" target="_blank">
-        <img src="../assets/icons/gmail.png" alt="Gmail Icon">
-    </a>
-`;
+// oldName.textContent = user.name || 'Your Name Here';
+// oldPosition.textContent = user.position || 'Your Position Here';
+// contactWrapper.innerHTML = `
+//     <h2>Contact</h2>
+//     <a href="https://wa.me/${user.phone}" target="_blank">
+//         <img src="../assets/icons/whatsapp.png" alt="Whatsapp Icon">
+//     </a>
+//     <a href="mailto:${user.email}" target="_blank">
+//         <img src="../assets/icons/gmail.png" alt="Gmail Icon">
+//     </a>
+// `;

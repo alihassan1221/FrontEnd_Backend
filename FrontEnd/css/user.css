@@ -369,3 +369,7 @@ input[type="submit"]{
 input[type="submit"]:hover {
     background-color: #0d6669;
 }
+
+.about .wrapper .btn {
+    border: 2px solid var(--white);
+}

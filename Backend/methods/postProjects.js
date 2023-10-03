@@ -1,56 +1,43 @@
-const fs = require("fs");
-const path = require("path");
-const { handleTokenExpirationError } = require("./sessionExpire");
+const mysql = require("mysql2/promise");
 const jwt = require("jsonwebtoken");
+const { handleTokenExpirationError } = require("./sessionExpire");
 const requestBodyParse = require("../util/body-parse");
 
 const JWT_SECRET = "secret_key";
 
-module.exports = async (req, res) => {
-  if (req.url === "/projects" && req.method === "POST") {
-    let data;
-    let token;
-    try {
-      const body = await requestBodyParse(req);
-      data = req.data;
-      token = req.headers.authorization;
+module.exports = (pool) => async (req, res) => {
+  let token;
+  try {
+    const body = await requestBodyParse(req);
+    token = req.headers.authorization;
 
-      if (!token) {
-        res.writeHead(401, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ statusCode: 401, message: "Unauthorized" }));
-        return;
-      }
-      const decoded = jwt.verify(token, JWT_SECRET);
-      const user = data.users.find((user) => user.id === decoded.userId);
+    const decoded = jwt.verify(token, JWT_SECRET);
 
-      if (!user) {
-        res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ statusCode: 400, message: "User not found" }));
-        return;
-      }
+    const [users] = await pool.promise().query('SELECT * FROM Users WHERE UserID = ?', [decoded.userId]);
 
-      if (!user.projects) {
-        user.projects = [];
-      }
-
-      user.projects.push(body);
-      fs.writeFileSync(path.join(__dirname, "../data/users.json"), JSON.stringify(data, null, 2));
-
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ message: 'Project Added successfully' }));
-    } catch (error) {
-      if (error.name === 'TokenExpiredError') {
-        const tokenErrorResponse = handleTokenExpirationError(data, token);
-        res.writeHead(tokenErrorResponse.statusCode, { "Content-Type": "application/json" });
-        res.end(JSON.stringify(tokenErrorResponse));
-      } else {
-        console.error(error);
-        res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ title: "Bad Request", message: "Request Body is not Valid!" }));
-      }
+    if (users.length === 0) {
+      res.end(JSON.stringify({ statusCode: 404, message: "User not found" }));
+      return;
     }
-  } else {
-    res.writeHead(404, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ title: "Not Found!", message: "Route not Found" }));
+
+    const user = users[0];
+    const project = body;
+
+    await pool.execute(
+      "INSERT INTO projects (userId, projectTitle, projectDetail, liveLink, codeLink, skills, projectImageURL) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [user.UserID, project.projectTitle, project.projectDetail, project.liveLink, project.codeLink, project.skills, project.projectImage]
+    );
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ statusCode: 200, message: "Project Data added successfully" }));
+  } 
+  catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      const tokenErrorResponse = handleTokenExpirationError(error, token);
+      res.end(JSON.stringify(tokenErrorResponse.statusCode, tokenErrorResponse));
+    } else {
+      console.error(error);
+      res.end(JSON.stringify({ title: "Bad Request", message: "Request Body is not Valid!" }));
+    }
   }
 };

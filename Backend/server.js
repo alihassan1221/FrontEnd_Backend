@@ -1,131 +1,203 @@
 const http = require("http");
-const signupReq = require('./methods/signup-request');
-const loginReq = require('./methods/login-request');
-const aboutReq = require('./methods/about-request');
-const getAboutReq = require('./methods/getAboutReq');
-const educationReq = require('./methods/education-request');
-const getEducation = require('./methods/getEducation');
-const deleteEducation = require('./methods/deleteEducation');
-const editEducation = require('./methods/editEducation');
-const postExperience = require('./methods/postExperience');
-const getExperience = require('./methods/getExperience');
-const deleteExperience = require('./methods/deleteExperience');
-const editExperience = require('./methods/editExperience');
-const postProjects = require('./methods/postProjects');
-const getProjects = require('./methods/getProjects');
-const deleteProjects = require('./methods/deleteProjects');
-const editProjects = require('./methods/editProjects');
-const postSocialLinks = require('./methods/postSocialLinks');
-const getSocialLinks = require('./methods/getSocialLinks');
-const getUsers = require('./methods/getUsers');
-const editUser = require('./methods/editUser');
-const getProjectsForAdmin = require("./methods/getProjectsForAdmin");
-const logout = require('./methods/logout');
-const getReq = require('./methods/get-request');
-const deleteUser = require('./methods/deleteUser');
-const restrictLogin = require('./methods/restrictLogin');
+const mysql = require('mysql2');
+
+
+const pool = mysql.createPool({
+  host: 'localhost',
+  user: 'root',
+  password: 'Admin@123',
+  database: 'usersdata',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
+
+pool.getConnection((err, connection) => {
+  if (err) {
+    console.error('Error connecting to MySQL:', err);
+    return;
+  }
+  console.log('Connected to MySQL database!');
+
+  connection.release();
+});
+
+pool.on('error', (err) => {
+  console.error('MySQL error:', err);
+});
+module.exports = pool;
+
+const signupReq = require('./methods/signup-request')(pool);
+const loginReq = require('./methods/login-request')(pool);
+const postAboutData = require('./methods/postAboutData')(pool);
+const getAboutReq = require('./methods/getAboutReq')(pool);
+const editAboutData = require('./methods/editAboutData')(pool);
+const getUsers = require('./methods/getUsers')(pool);
+const educationReq = require('./methods/postEducation')(pool);
+const getEducation = require('./methods/getEducation')(pool);
+const deleteEducation = require('./methods/deleteEducation')(pool);
+const editEducation = require('./methods/editEducation')(pool);
+const postExperience = require('./methods/postExperience')(pool);
+const getExperience = require('./methods/getExperience')(pool);
+const deleteExperience = require('./methods/deleteExperience')(pool);
+const editExperience = require('./methods/editExperience')(pool);
+const postProjects = require('./methods/postProjects')(pool);
+const getProjects = require('./methods/getProjects')(pool);
+const deleteProjects = require('./methods/deleteProjects')(pool);
+const editProjects = require('./methods/editProjects')(pool);
+const postSocialLinks = require('./methods/postSocialLinks')(pool);
+const getSocialLinks = require('./methods/getSocialLinks')(pool);
+const editSocialLinks = require('./methods/editSocialLinks')(pool);
+const editUser = require('./methods/editUser')(pool);
+const deleteUser = require('./methods/deleteUser')(pool);
+const getProjectsForAdmin = require("./methods/getProjectsForAdmin")(pool);
+const logout = require('./methods/logout')(pool);
+const changeRole = require('./methods/changeUserRole')(pool);
+const restrictLogin = require('./methods/restrictLogin')(pool);
+const checkToken = require('./methods/sessionExpire');
 
 const cors = require("cors");
-let data;
-
-// Try to load the JSON data from the file
-try {
-  data = require("./data/users.json");
-} catch (err) {
-  console.error("Error loading data from users.json:", err);
-  data = { users: [] };
-}
-
 const PORT = 3000;
 
-const app = http.createServer((req, res) => {
-  req.data = data;
-
+const app = http.createServer(async (req, res) => {
+ 
   cors()(req, res, () => {});
+  
+  if (req.url === "/logout") {
+    if(req.method === "DELETE"){
+      logout(req, res);
+    }
+  }
 
-  if (req.url === "/logout" && req.method === "POST") {
-    logout(req, res);
-  }
-  else if (req.url === "/submit" && req.method === "POST") {
-    signupReq(req, res);
+  else if (req.url === "/submit") {
+    if(req.method === 'POST'){
+      signupReq(req, res);
+      return;
+    }
   } 
-  else if (req.url === "/login" && req.method === "POST") {
-    loginReq(req, res);
+
+  else if (req.url === "/login") {
+    if( req.method === "POST"){
+      loginReq(req, res);
+      return;
+    }
   } 
-  else if (req.url === '/restrictedUrl' && req.method === "GET") {
-    restrictLogin(req, res);
+
+  else if (req.url === '/about') {
+    if(req.method === 'POST'){
+      postAboutData(req, res);
+    }
+    if(req.method === 'GET'){
+      getAboutReq(req, res);
+    }
+    if(req.method === 'PUT'){
+      editAboutData(req, res);
+    }
+  }
+
+  else if (req.url.startsWith('/education')) {
+    if (req.method === 'POST') {
+        educationReq(req, res);
+    }
+     if (req.method === 'GET') {
+        getEducation(req, res);
+    } 
+    if (req.method === 'DELETE') {
+        const educationId = req.url.split('/').pop();
+        deleteEducation(req, res, educationId);
+    }
+    if (req.method === 'PUT') {
+        const educationId = req.url.split('/').pop();
+        editEducation(req, res, educationId);
+    }
+  }
+ 
+  else if (req.url.startsWith('/experience')){
+    if(req.method === 'POST'){
+      postExperience(req, res);
+    }
+    if(req.method === 'GET'){
+      getExperience(req, res);
+    }
+    if(req.method === 'PUT'){
+      const experienceId = req.url.split('/').pop();
+      editExperience(req, res, experienceId);
+    }
+    if(req.method === 'DELETE'){
+      const experienceId = req.url.split('/').pop();
+      deleteExperience(req, res, experienceId);
+    }
+  }
+
+  else if (req.url.startsWith('/projects')){
+    if(req.method === 'POST'){
+      postProjects(req, res);
+    }
+    if(req.method === 'GET'){
+      getProjects(req, res);
+    }
+    if(req.method === 'PUT'){
+      const projectId = req.url.split('/').pop();
+      editProjects(req, res, projectId);
+    }
+    if(req.method === 'DELETE'){
+      const projectId = req.url.split('/').pop();
+      deleteProjects(req, res, projectId);
+    }
+  }
+  
+  else if (req.url === '/socialLinks') {
+    if(req.method === 'POST'){
+      postSocialLinks(req, res);
+    }
+    if(req.method === 'GET'){
+      getSocialLinks(req, res);
+    }
+    if(req.method === 'PUT'){
+      editSocialLinks(req, res);
+    }
+  }
+
+    else if (req.url.startsWith('/adminUsers')){
+    if(req.method === 'GET'){
+      getUsers(req, res);
+      return;
+    }
+    if(req.method === 'PUT'){
+      const UserID = req.url.split('/').pop();
+      editUser(req, res, UserID);
+    }
+    if(req.method === 'DELETE'){
+      const UserID = req.url.split('/').pop();
+      deleteUser(req, res, UserID);
+    }
+  }
+
+  else if (req.url === '/adminProjects') {
+    if(req.method === "GET"){
+      getProjectsForAdmin(req, res);
+    }
   } 
-  else if (req.url === '/about' && req.method === 'POST'){
-    aboutReq(req, res);
+
+  else if (req.url.startsWith('/changeUserRoleToAdmin')){
+    if(req.method === 'POST'){
+      const UserID = req.url.split('/').pop();
+      changeRole(req, res, UserID);
+    }
   }
-  else if (req.url === '/about' && req.method === 'GET'){
-    getAboutReq(req, res);
-  }
-  else if (req.url === '/education' && req.method === 'POST'){
-    educationReq(req, res);
-  }
-  else if (req.url === '/education' && req.method === 'GET'){
-    getEducation(req, res);
-  }
-  else if (req.url.startsWith('/deleteEducation/') && req.method === 'DELETE'){
-    const index = req.url.split('/').pop();
-    deleteEducation(req, res, index);
-  }
-  else if (req.url.startsWith('/editEducation/') && req.method === 'PUT'){
-    const index = req.url.split('/').pop();
-    editEducation(req, res, index);
-  }
-  else if (req.url === '/experience' && req.method === 'POST'){
-    postExperience(req, res);
-  }
-  else if (req.url === '/experience' && req.method === 'GET'){
-    getExperience(req, res);
-  }
-  else if (req.url.startsWith('/deleteExperience/') && req.method === 'DELETE'){
-    const index = req.url.split('/').pop();
-    deleteExperience(req, res, index);
-  }
-  else if (req.url.startsWith('/editExperience/') && req.method === 'PUT'){
-    const index = req.url.split('/').pop();
-    editExperience(req, res, index);
-  }
-  else if (req.url === '/projects' && req.method === 'POST'){
-    postProjects(req, res);
-  }
-  else if (req.url === '/projects' && req.method === 'GET'){
-    getProjects(req, res);
-  }
-  else if (req.url.startsWith('/deleteProjects/') && req.method === 'DELETE'){
-    const index = req.url.split('/').pop();
-    deleteProjects(req, res, index);
-  }
-  else if (req.url.startsWith('/editProjects/') && req.method === 'PUT'){
-    const index = req.url.split('/').pop();
-    editProjects(req, res, index);
-  }
-  else if (req.url === '/socialLinks' && req.method === "POST") {
-    postSocialLinks(req, res);
-  }
-  else if (req.url === '/socialLinks' && req.method === "GET") {
-    getSocialLinks(req, res);
+
+  else if (req.url === '/restrictedUrl') {
+    if(req.method === "GET"){
+      restrictLogin(req, res);
+    }
   } 
-  else if (req.url === '/getUsers' && req.method === "GET") {
-    getUsers(req, res);
-  } 
-  else if (req.url.startsWith('/deleteUser/') && req.method === 'DELETE'){
-    const index = req.url.split('/').pop();
-    deleteUser(req, res, index);
+
+  else {
+    res.writeHead(404, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ statusCode: '404', title: "Not Found!", message: "Route not Found" }));
   }
-  else if (req.url.startsWith('/editUser/') && req.method === 'PUT'){
-    const index = req.url.split('/').pop();
-    editUser(req, res, index);
-  }
-  else if (req.url === '/adminProjects' && req.method === "GET") {
-    getProjectsForAdmin(req, res);
-  } 
-  else if (req.url.startsWith('/api/users') && req.method === "GET") {
-    getReq(req, res);
-  }
+
+  
 });
 
 app.listen(PORT, () => {

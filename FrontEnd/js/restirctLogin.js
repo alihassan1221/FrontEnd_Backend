@@ -16,11 +16,12 @@ function restrictLogin() {
       .then((response) => response.json())
       .then((data) => {
         if (data.statusCode === 200) {
-          if (data.email === 'admin@gmail.com') {
+          if (data.Role === 'admin') {
             if (window.location.pathname === '/html/user.html' || window.location.pathname === '/index.html') {
               window.location.href = '../html/adminDashboard';
             }
           } 
+
           else {
             if (window.location.pathname === '/html/adminDashboard.html' || window.location.pathname === '/index.html') {
               window.location.href = '../html/user.html';

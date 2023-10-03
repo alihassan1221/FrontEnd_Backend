@@ -1,56 +1,51 @@
-const fs = require('fs');
-const path = require('path');
-const jwt = require('jsonwebtoken');
-const { handleTokenExpirationError } = require('./sessionExpire');
-const requestBodyParse = require('../util/body-parse');
+const mysql = require("mysql2/promise");
+const jwt = require("jsonwebtoken");
+const { handleTokenExpirationError } = require("./sessionExpire");
+const requestBodyParse = require("../util/body-parse");
 
-const JWT_SECRET = 'secret_key';
+const JWT_SECRET = "secret_key";
 
-module.exports = async (req, res, index) => {
-    let data;
-    let token;
-    
-    try {
-        data = req.data;
-        token = req.headers.authorization;
+module.exports = (pool) => async (req, res, educationId) => {
+  let token;
+  try {
+    const id = parseInt(educationId);
 
-        if (!token) {
-            res.writeHead(401, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ statusCode: 401, message: 'Unauthorized' }));
-            return;
-        }
+    token = req.headers.authorization;
+    const decoded = jwt.verify(token, JWT_SECRET);
 
-        const decoded = jwt.verify(token, JWT_SECRET);
-        const user = data.users.find((user) => user.id === decoded.userId);
+    const [users] = await pool.promise().query('SELECT * FROM Users WHERE UserID = ?', [decoded.userId]);
 
-        if (!user) {
-            res.writeHead(404, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ title: 'Not Found!', message: 'User not found' }));
-            return;
-        }
-
-        const education = user.education || [];
-
-        if (isNaN(index) || index < 0 || index >= education.length) {
-            res.writeHead(400, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ title: 'Bad Request', message: 'Invalid Index' }));
-            return;
-        }
-
-        education.splice(index, 1);
-        fs.writeFileSync(path.join(__dirname, '../data/users.json'), JSON.stringify(data, null, 2));
-
-        res.writeHead(204);
-        res.end();
-    } catch (error) {
-        if (error.name === 'TokenExpiredError') {
-            const tokenErrorResponse = handleTokenExpirationError(data, token);
-            res.writeHead(tokenErrorResponse.statusCode, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(tokenErrorResponse));
-        } else {
-            console.error(error);
-            res.writeHead(400, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ title: 'Bad Request', message: 'Request Body is not Valid!' }));
-        }
+    if (users.length === 0) {
+      res.writeHead(402, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ statusCode: 402, message: "User not found" }));
+      return;
     }
+
+    const user = users[0];
+
+    const [existingEducation] = await pool.promise().query('SELECT * FROM educations WHERE userId = ?', [user.UserID]);
+
+    if (existingEducation.length > 0) {
+      for (let education of existingEducation) {
+        if (education.id === id) {
+          await pool.execute('DELETE FROM educations WHERE id=?', [education.id]);
+        }
+      }
+
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ statusCode: 200, message: "Education deleted successfully" }));
+    } else {
+      res.writeHead(402, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ statusCode: 402, message: "Education not found" }));
+    }
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    if (error.name === 'TokenExpiredError') {
+      const tokenErrorResponse = handleTokenExpirationError(error, token);
+      res.end(JSON.stringify(tokenErrorResponse.statusCode, tokenErrorResponse));
+    } else {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ title: "Bad Request", message: "Request Body is not Valid!" }));
+    }
+  }
 };

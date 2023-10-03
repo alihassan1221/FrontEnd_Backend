@@ -3,10 +3,12 @@ module.exports = (request) => {
     try {
       let body = "";
 
+      // Listen for incoming data chunks
       request.on("data", (chunk) => {
         body += chunk;
       });
 
+      // When all data has been received
       request.on("end", () => {
         try {
           if (!body || body.trim() === "") {
@@ -18,17 +20,18 @@ module.exports = (request) => {
           }
         } catch (parseError) {
           console.error("Error parsing request body:", parseError);
-          reject(parseError);
+          reject(parseError); // Reject with the parsing error
         }
       });
-    } catch (err) {
-      console.error("Error reading request body:", err);
-      reject(err);
-    }
 
-    request.on("error", (err) => {
-      console.error("Error reading request:", err);
-      reject(err);
-    });
+      // Handle any errors that occur during data reading
+      request.on("error", (err) => {
+        console.error("Error reading request:", err);
+        reject(err); // Reject with the read error
+      });
+    } catch (err) {
+      console.error("Error setting up request body parsing:", err);
+      reject(err); // Reject with the setup error
+    }
   });
 };

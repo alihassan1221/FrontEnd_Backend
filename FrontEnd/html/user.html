@@ -36,7 +36,7 @@
         <div class="wrapper">
             <div class="intro">
                 
-                <h1 id="heading">Hi, my name is <span class="gradient-color" id="oldName">Ali Hassan</span> <br> I'm the <span id="oldPosition">Full Stack Developer</span>.</h1>
+                <h1 id="heading">Hi, my name is <span class="gradient-color" id="oldName">Your Name</span> <br> I'm the <span id="oldPosition">Your Position</span>.</h1>
                 <button class="btn gradient-color btn-hover"><a href="#about">know more</a></button>
             </div>
             <div class="popup">
@@ -59,7 +59,7 @@
         <div class="wrapper">
             <h2>about me</h2>
             <button id="personalDetailBtn" class="btn btn-white">Add Details</button>
-            <!-- <button id="editPersonalDetailBtn" class="btn btn-white">Edit Details</button> -->
+            <button id="editPersonalDetailBtn" class="btn btn-white">Edit Details</button>
 
             <div class="profile">
                 <form class="aboutForm" id="aboutForm">
@@ -274,7 +274,7 @@
                  <label for="projectImage">Upload Project Image*</label>
                  <input id="projectImage" type="file" name="projectImage" accept="image/*" onchange="getImageUrl(event)">
 
-                <button id="saveBtn" class="btn">Save</button>
+                <button id="saveProjectBtn" class="btn">Save</button>
 
             </form>
             <div class="popover-detail">
@@ -306,6 +306,7 @@
         <div class="wrapper">
             <div class="button">
                 <button id="addSocailLinkBtn" class="btn gradient-color btn-white">Add Social Links</button>
+                <button id="editSocialLinkBtn" class="btn gradient-color btn-white">Edit Social Links</button>
             </div>
             <div class = "socialLinkForm">
                 <div class="heading">
@@ -315,15 +316,15 @@
                 
                 <form class="socialForm" id="socialForm">
                     <label for="twitterLink">Twitter Link*</label>
-                    <input id="twitterLink" type="url" placeholder="Your Twitter Profile Link" >
+                    <input id="twitterLink" type="url" placeholder="Your Twitter Profile Link" required>
 
                     <label for="linkedinLink">LinkedIn Link*</label>
-                    <input id="linkedinLink" type="url" placeholder="Your Linkedin Profile Link" >
+                    <input id="linkedinLink" type="url" placeholder="Your Linkedin Profile Link" required>
 
                     <label for="githubLink">Github Link*</label>
-                    <input id="githubLink" type="url" placeholder="Your GitHub Profile Link" >
+                    <input id="githubLink" type="url" placeholder="Your GitHub Profile Link" required>
 
-                    <input type="submit" value="Save">
+                    <input id="saveBtn" type="submit" value="Save">
                 </form>
             </div>
             <div class="arrowup">

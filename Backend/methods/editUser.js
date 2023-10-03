@@ -1,25 +1,22 @@
 const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
 const { handleTokenExpirationError } = require('./sessionExpire');
 const requestBodyParse = require('../util/body-parse');
 
 const JWT_SECRET = 'secret_key';
 
-module.exports = async (req, res) => {
+module.exports = (pool) => async (req, res, UserID) => {
+    let token;
     try {
         const body = await requestBodyParse(req);
-        const data = req.data;
-        const users = data.users || [];
+        token = req.headers.authorization;
 
-        // Get the token from the Authorization header
-        const token = req.headers.authorization;
-
-        // Verify and decode the token
-        jwt.verify(token, JWT_SECRET, (err, decoded) => {
+        jwt.verify(token, JWT_SECRET, async (err, decoded) => {
             if (err) {
                 if (err.name === 'TokenExpiredError') {
-                    const tokenErrorResponse = handleTokenExpirationError(data, token);
+                    const tokenErrorResponse = handleTokenExpirationError(err, token);
                     res.writeHead(tokenErrorResponse.statusCode, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify(tokenErrorResponse));
                 } else {
@@ -28,17 +25,24 @@ module.exports = async (req, res) => {
                     res.end(JSON.stringify({ statusCode: 401, message: 'Unauthorized' }));
                 }
             } else {
-                // Token is valid, continue with your logic
-                if (isNaN(index) || index < 0 || index >= users.length) {
-                    res.statusCode = 400;
-                    res.write(JSON.stringify({ title: 'Bad Request', message: 'Invalid Index' }));
-                    res.end();
-                } else {
-                    users[index] = body;
-                    fs.writeFileSync(path.join(__dirname, '../data/users.json'), JSON.stringify(data, null, 2));
+                const id = UserID;
+                const [users] = await pool.promise().query('SELECT * FROM Users WHERE UserID = ?', [id]);
+                const user = users[0];
+
+                const hashedPassword = await bcrypt.hash(body.password, 10);
+
+                if (user) {
+                    await pool.execute("UPDATE Users SET UserID=?, FirstName=?, LastName=?, Email=?, Phone=?, PasswordHash=? WHERE UserID=?",
+                        [id, body.fname, body.lname, body.email, body.phone, hashedPassword, id]
+                    );
+
                     res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ message: 'User updated successfully' }));
+                    res.end(JSON.stringify({ title: 'Updated', message: 'User Update Successful!' }));
+                    return;
                 }
+
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ title: 'Bad Request', message: 'User Not Updated!' }));
             }
         });
     } catch (error) {

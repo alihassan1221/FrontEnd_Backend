@@ -7,7 +7,8 @@ let projectsContainer = document.getElementById("userProjects");
 let projectsForm = document.getElementById("projectsForm");
 let userProjects = document.getElementById("userProjects");
 let projectImage = document.getElementById("projectImage");
-let imgUrl = "../assets/images/dummy.jpeg";
+let projects = [];
+let imgUrl;
 
 addProjectBtn.addEventListener("click", () => {
   projectsForm.classList.add("active");
@@ -38,7 +39,7 @@ projectsForm.addEventListener("submit", (e) => {
     liveLink: liveLink,
     codeLink: codeLink,
     skills: skills,
-    projectImage: imgUrl,
+    projectImage: imgUrl || "../assets/images/dummy.jpeg",
   };
 
   const headers = {
@@ -65,9 +66,9 @@ projectsForm.addEventListener("submit", (e) => {
       }
       if (response.status === 200) {
         Swal.fire("Added!", "Project Added Successfully", "success");
+        ProjectsList();
         projectsForm.reset();
         projectsForm.classList.remove("active");
-        ProjectsList();
       }
       return response.json();
     })
@@ -90,7 +91,7 @@ function getImageUrl(e) {
 }
 
 // Delete Project
-function deleteProject(index) {
+function deleteProject(projectId) {
   const token = localStorage.getItem("token");
 
   if (!token) {
@@ -116,7 +117,7 @@ function deleteProject(index) {
         Authorization: token,
       };
 
-      fetch(`http://localhost:3000/deleteProjects/${index}`, {
+      fetch(`http://localhost:3000/projects/${projectId}`, {
         method: "DELETE",
         headers: headers,
       })
@@ -130,9 +131,9 @@ function deleteProject(index) {
             })
             return;
           }
-          if (response.status === 204) {
+          if (response.status === 200) {
             Swal.fire("Deleted!", "Project entry has been deleted.", "success");
-            ProjectsList(); // Refresh the experience list after deletion
+            ProjectsList();
           } else {
             Swal.fire("Error", "Failed to delete Project entry.", "error");
           }
@@ -145,11 +146,11 @@ function deleteProject(index) {
 }
 
 // Show Details in PopUp
-function showPopup(project, index) {
+function showPopup(project) {
   let popupImage = popoverDetail.querySelector("img");
   let popupTitle = popoverDetail.querySelector("h2");
   let popupDetail = popoverDetail.querySelector("p");
-  popupImage.src = project.projectImage;
+  popupImage.src = project.projectImageURL;
   popupImage.alt = "Project Image";
   popupTitle.textContent = project.projectTitle;
   popupDetail.textContent = project.projectDetail;
@@ -161,7 +162,10 @@ function closePopup() {
   popoverDetail.style.display = "none";
 }
 
-function editProject(index) {
+
+
+// Edit Function
+function editProject(projectId) {
   const token = localStorage.getItem("token");
 
   if (!token) {
@@ -180,8 +184,19 @@ function editProject(index) {
 
   projectsForm.classList.add("active");
 
-  let saveBtn = document.getElementById("saveBtn");
-  saveBtn.onclick = function (e) {
+  for(let project of projects){
+    if(project.id === projectId){
+      document.getElementById("projectTitle").value = project.projectTitle;
+      document.getElementById("projectDetail").value = project.projectDetail;
+      document.getElementById("liveLink").value = project.liveLink;
+      document.getElementById("codeLink").value = project.codeLink;
+      document.getElementById("skills").value = project.skills;
+    }
+
+}
+
+  let saveBtn = document.getElementById("saveProjectBtn");
+  saveBtn.addEventListener('click', (e) => {
     e.preventDefault();
     let projectTitle = document.getElementById("projectTitle").value;
     let projectDetail = document.getElementById("projectDetail").value;
@@ -189,19 +204,19 @@ function editProject(index) {
     let codeLink = document.getElementById("codeLink").value;
     let skills = document.getElementById("skills").value;
 
-    let newProject = {
+    let updatedProject = {
       projectTitle: projectTitle,
       projectDetail: projectDetail,
       liveLink: liveLink,
       codeLink: codeLink,
       skills: skills,
-      projectImage: imgUrl,
+      projectImage: imgUrl || "../assets/images/dummy.jpeg",
     };
 
-    fetch(`http://localhost:3000/editProjects/${index}`, {
+    fetch(`http://localhost:3000/projects/${projectId}`, {
       method: "PUT",
       headers: headers,
-      body: JSON.stringify(newProject),
+      body: JSON.stringify(updatedProject),
     })
       .then((response) => {
         if (response.status === 401) {
@@ -227,7 +242,7 @@ function editProject(index) {
       .catch((err) => {
         console.error(err);
       });
-  };
+  });
 }
 
 // Displaying and Searching proejcts in FrontEnd
@@ -265,6 +280,9 @@ function ProjectsList(search = "") {
       return response.json();
     })
     .then((data) => {
+
+      projects.push(...data.projects);
+
       let projectsContainer = document.getElementById("userProjects");
       projectsContainer.innerHTML = "";
       userFound = false;
@@ -301,7 +319,7 @@ function ProjectsList(search = "") {
           let imageElement = document.createElement("div");
           imageElement.classList.add("project-image");
           let img = document.createElement("img");
-          img.src = data.projectImage;
+          img.src = data.projectImageURL;
           img.alt = "Project Image";
           imageElement.appendChild(img);
 
@@ -317,7 +335,7 @@ function ProjectsList(search = "") {
           editButton.classList.add("btn", "gradient-color");
           editButton.textContent = "Edit";
           editButton.addEventListener("click", () => {
-            editProject(index);
+            editProject(data.id);
           });
 
           let deleteBtn = document.createElement("button");
@@ -325,7 +343,7 @@ function ProjectsList(search = "") {
           deleteBtn.innerHTML = `<a title="Delete">Delete</a>`;
 
           deleteBtn.addEventListener("click", () => {
-            deleteProject(index);
+            deleteProject(data.id);
           });
 
           detailDiv.appendChild(titleElement);
