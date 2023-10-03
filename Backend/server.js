@@ -160,7 +160,8 @@ const app = http.createServer(async (req, res) => {
 
     else if (req.url.startsWith('/adminUsers')){
     if(req.method === 'GET'){
-      getUsers(req, res);
+      const searchInput = req.url.split('/').pop();
+      getUsers(req, res, searchInput);
       return;
     }
     if(req.method === 'PUT'){
@@ -173,11 +174,12 @@ const app = http.createServer(async (req, res) => {
     }
   }
 
-  else if (req.url === '/adminProjects') {
-    if(req.method === "GET"){
-      getProjectsForAdmin(req, res);
+  else if (req.url.startsWith('/adminProjects')) {
+    if (req.method === "GET") {
+      const searchInput = req.url.split('/').pop();
+      getProjectsForAdmin(req, res, searchInput);
     }
-  } 
+  }
 
   else if (req.url.startsWith('/changeUserRoleToAdmin')){
     if(req.method === 'POST'){

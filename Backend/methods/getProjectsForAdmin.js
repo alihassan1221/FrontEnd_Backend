@@ -3,17 +3,15 @@ const path = require("path");
 const jwt = require("jsonwebtoken");
 const { handleTokenExpirationError } = require("./sessionExpire");
 
-module.exports = (pool) => async (req, res) => {
-    if (req.url === '/adminProjects' && req.method === 'GET') {
+module.exports = (pool) => async (req, res, searchInput) => {
+    if (req.url.startsWith('/adminProjects') && req.method === 'GET') {
         let token;
         try {
             token = req.headers.authorization;
-
-            // Verify and decode the token
             jwt.verify(token, 'secret_key', async (err, decoded) => {
                 if (err) {
                     if (err.name === 'TokenExpiredError') {
-                      const tokenErrorResponse = handleTokenExpirationError(error, token);
+                      const tokenErrorResponse = handleTokenExpirationError(err, token);
                       res.writeHead(tokenErrorResponse.statusCode, { "Content-Type": "application/json" });
                       res.end(JSON.stringify(tokenErrorResponse));
                     } else {
@@ -28,15 +26,25 @@ module.exports = (pool) => async (req, res) => {
                         res.writeHead(402, { "Content-Type": "application/json" });
                         res.end(JSON.stringify({ statusCode: 402, message: "Projects Data Not Present!" }));
                     } else {
-                        const projects = existingProjects;
+
+                        let searchProjects = [];
+                        existingProjects.forEach((project, index) => {
+                            if(project.projectTitle.toLowerCase().includes(searchInput.toLowerCase())|| project.skills.toLowerCase().includes(searchInput.toLowerCase())){
+                                searchProjects.push(project);
+                            }
+                        });
+
                         res.writeHead(200, { "Content-Type": "application/json" });
-                        res.end(JSON.stringify({ statusCode: 200, message: "Projects Get Successfully!", projects }));
+                        res.end(JSON.stringify({ statusCode: 200, message: "Projects Get Successfully!", searchProjects }));
                     }
                 }
             });
         } catch (err) {
             if (err.name === 'TokenExpiredError') {
                 const tokenErrorResponse = handleTokenExpirationError(req, res);
+                await pool.execute(
+                    'DELETE FROM usersTokens WHERE token=?', [token]
+                  );
                 res.writeHead(tokenErrorResponse.statusCode, { "Content-Type": "application/json" });
                 res.end(JSON.stringify(tokenErrorResponse));
             } else {

@@ -39,6 +39,9 @@ module.exports = (pool) => async (req, res) => {
     console.error(error); // Log the error for debugging
     if (error.name === 'TokenExpiredError') {
       const tokenErrorResponse = handleTokenExpirationError(error, token);
+      await pool.execute(
+        'DELETE FROM usersTokens WHERE token=?', [token]
+      );
       res.end(JSON.stringify(tokenErrorResponse.statusCode, tokenErrorResponse));
     } else {
       res.end(JSON.stringify({ title: "Bad Request", message: "Request Body is not Valid!" }));

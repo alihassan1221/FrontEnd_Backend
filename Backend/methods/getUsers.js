@@ -3,8 +3,8 @@ const path = require("path");
 const jwt = require("jsonwebtoken");
 const { handleTokenExpirationError } = require("./sessionExpire");
 
-module.exports = (pool) => async (req, res) => {
-  if (req.url === '/adminUsers' && req.method === 'GET') {
+module.exports = (pool) => async (req, res, searchInput) => {
+  if (req.url.startsWith('/adminUsers') && req.method === 'GET') {
     let token;
     try {
       token = req.headers.authorization;
@@ -13,6 +13,9 @@ module.exports = (pool) => async (req, res) => {
         if (err) {
           if (err.name === 'TokenExpiredError') {
             const tokenErrorResponse = handleTokenExpirationError(err, token);
+            await pool.execute(
+              'DELETE FROM usersTokens WHERE token=?', [token]
+            );
             res.writeHead(tokenErrorResponse.statusCode, { "Content-Type": "application/json" });
             res.end(JSON.stringify(tokenErrorResponse));
           } else {
@@ -23,8 +26,12 @@ module.exports = (pool) => async (req, res) => {
         } else {
           try {
             const [results] = await pool.promise().query('SELECT * FROM Users');
-
-            const users = results;
+            let users = [];
+            results.forEach(user => {
+              if(user.Email.toLowerCase().includes(searchInput.toLowerCase())){
+                users.push(user);
+              }
+            });
 
             res.writeHead(200, { "Content-Type": "application/json" });
             res.end(JSON.stringify({ statusCode: 200, message: "Users Data Get Successfully!", users }));

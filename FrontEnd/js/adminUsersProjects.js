@@ -36,7 +36,7 @@ function ProjectsList(search = "") {
       return;
   }
 
-  fetch('http://localhost:3000/adminProjects', {
+  fetch(`http://localhost:3000/adminProjects/${search}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -58,11 +58,8 @@ function ProjectsList(search = "") {
     .then((data) => {
       projectsContainer.innerHTML = "";
       let projectFound;
-      data.projects.forEach((data, index) => {
-        if (
-          data.skills.toLowerCase().includes(search.toLowerCase()) ||
-          data.projectTitle.toLowerCase().includes(search.toLowerCase())
-        ) {
+      data.searchProjects.forEach((data, index) => {
+
           projectFound = true;
           
           let projectElement = document.createElement("div");
@@ -112,7 +109,7 @@ function ProjectsList(search = "") {
           projectElement.appendChild(detailDiv);
           projectElement.appendChild(imageElement);
           projectsContainer.appendChild(projectElement);
-        }
+        // }
       });
       if (!projectFound) {
         let text = document.createElement('p');

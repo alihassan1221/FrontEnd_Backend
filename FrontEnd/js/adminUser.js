@@ -26,7 +26,7 @@ function displayUsers(search = "") {
         return;
     }
 
-    fetch('http://localhost:3000/adminUsers', {
+    fetch(`http://localhost:3000/adminUsers/${search}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ function displayUsers(search = "") {
         .catch((err) => {
             console.error(err);
         })
-    searchUser.addEventListener('change', () => {
+    searchUser.addEventListener('click', () => {
         displayUsers(searchUser.value);
     });
 }

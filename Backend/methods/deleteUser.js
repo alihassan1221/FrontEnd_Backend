@@ -21,6 +21,9 @@ module.exports = (pool) => async (req, res, UserID) => {
             if (err) {
                 if (err.name === 'TokenExpiredError') {
                     const tokenErrorResponse = handleTokenExpirationError(err, token);
+                    await pool.execute(
+                        'DELETE FROM usersTokens WHERE token=?', [token]
+                      );
                     res.writeHead(tokenErrorResponse.statusCode, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify(tokenErrorResponse));
                 } else {

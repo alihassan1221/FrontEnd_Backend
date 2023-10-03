@@ -1,6 +1,7 @@
 CREATE DATABASE IF NOT EXISTS usersdata;
 
 Use usersdata;
+
 SELECT * FROM users;
 SELECT * FROM aboutData;
 SELECT * FROM educations;
@@ -9,6 +10,7 @@ SELECT * FROM projects;
 SELECT * FROM usersTokens;
 SELECT * FROM social_media_links;
 
+DROP TABLE usersTokens;
 
 CREATE TABLE IF NOT EXISTS Users (
     UserID INT AUTO_INCREMENT PRIMARY KEY,
